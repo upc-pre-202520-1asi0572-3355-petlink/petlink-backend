@@ -9,7 +9,7 @@ public class VitalSignRequest {
     public String deviceId;
 
     @Schema(description = "timestamp generado en el ESP32")
-    public long timestamp;
+    public String timestamp;
 
     @Schema(description = "Ritmo cardíaco en BPM")
     public int heartBpm;
