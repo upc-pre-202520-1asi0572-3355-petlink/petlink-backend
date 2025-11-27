@@ -1,41 +1,47 @@
 package com.petlink.petlink_backend.controller;
 
-import com.petlink.petlink_backend.DTO.MonitoreoRequest;
 import com.petlink.petlink_backend.DTO.MonitoreoResponse;
-import com.petlink.petlink_backend.DTO.PetMonitoringFullResponse;
-import com.petlink.petlink_backend.service.MonitoreoService;
+import com.petlink.petlink_backend.entity.Mascota;
+import com.petlink.petlink_backend.repository.MascotaRepository;
+import com.petlink.petlink_backend.repository.MonitoreoRepository;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/monitoreo")
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 public class MonitoreoController {
 
-    private final MonitoreoService service;
+    private final MonitoreoRepository monitoreoRepo;
+    private final MascotaRepository mascotaRepo;
 
-    public MonitoreoController(MonitoreoService service) {
-        this.service = service;
+    public MonitoreoController(MonitoreoRepository monitoreoRepo, MascotaRepository mascotaRepo) {
+        this.monitoreoRepo = monitoreoRepo;
+        this.mascotaRepo = mascotaRepo;
     }
 
-    @GetMapping
-    public List<MonitoreoResponse> listar() {
-        return service.listar();
-    }
+    /**
+     * Devuelve histórico de pulsos y actividad de una mascota
+     */
+    @GetMapping("/mascota/{idMascota}")
+    public List<MonitoreoResponse> historial(@PathVariable Long idMascota) {
 
-    @PostMapping
-    public MonitoreoResponse crear(@RequestBody MonitoreoRequest req) {
-        return service.crear(req);
-    }
+        Mascota mascota = mascotaRepo.findById(idMascota)
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada"));
 
-    @DeleteMapping("/{id}")
-    public void eliminar(@PathVariable Long id) {
-        service.eliminar(id);
-    }
-
-    @GetMapping("/pet/{id}/monitoring")
-    public PetMonitoringFullResponse getMonitoring(@PathVariable Long id) {
-        return service.getMonitoringView(id);
+        return monitoreoRepo.findByMascota(mascota)
+                .stream()
+                .map(x -> new MonitoreoResponse(
+                        x.getId(),
+                        mascota.getId(),
+                        mascota.getNombre(),
+                        x.getRitmoCardiaco(),
+                        x.getActividad(),
+                        x.getUbicacion(),
+                        x.getEstadoLED(),
+                        x.getUltimaActualizacion()))
+                .toList();
     }
 }

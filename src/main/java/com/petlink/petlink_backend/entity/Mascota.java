@@ -42,4 +42,9 @@ public class Mascota {
     private String raza;
 
     private String horaIngreso; // formato "10:30 AM"
+
+    private boolean internado = false;
+
+    @OneToOne
+    private Collar collarAsignado;
 }

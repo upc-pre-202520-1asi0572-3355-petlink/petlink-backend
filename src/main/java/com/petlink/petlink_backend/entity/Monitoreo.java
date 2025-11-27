@@ -27,6 +27,9 @@ public class Monitoreo {
     @Column(nullable = false)
     private Integer actividad; // %
 
+    @Column(name = "fecha")
+    private String fecha;
+
     @Column(nullable = false, length = 50)
     private String ubicacion;
 
@@ -35,4 +38,12 @@ public class Monitoreo {
 
     @Column(name = "ultimaActualizacion")
     private LocalDateTime ultimaActualizacion;
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
 }

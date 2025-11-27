@@ -16,4 +16,6 @@ public class VitalSignRequest {
 
     @Schema(description = "Estado del indicador (ESTABLE, ALERTA, CRITICO)")
     public String state;
+
+    public Long collarId;
 }

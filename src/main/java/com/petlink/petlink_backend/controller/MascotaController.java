@@ -43,4 +43,16 @@ public class MascotaController {
             return ResponseEntity.notFound().build(); // 404 Not Found
         }
     }
+
+    @PostMapping("/{id}/internar/{idCollar}")
+    public Mascota internar(
+            @PathVariable Long id,
+            @PathVariable Long idCollar) {
+        return mascotaService.internar(id, idCollar);
+    }
+
+    @PostMapping("/{id}/alta")
+    public Mascota darAlta(@PathVariable Long id) {
+        return mascotaService.darAlta(id);
+    }
 }
