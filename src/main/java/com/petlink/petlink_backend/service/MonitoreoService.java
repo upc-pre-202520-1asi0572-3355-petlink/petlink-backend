@@ -10,6 +10,7 @@ import com.petlink.petlink_backend.repository.MonitoreoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Optional;
@@ -99,9 +100,14 @@ public class MonitoreoService {
         registros.sort((a, b) -> b.getUltimaActualizacion().compareTo(a.getUltimaActualizacion()));
 
         // normaliza los datos de mascota
+        // normaliza los datos de mascota
         String owner = mascota.getOwner() != null ? mascota.getOwner() : "Sin dueño";
         String breed = mascota.getRaza() != null ? mascota.getRaza() : "Desconocida";
-        String admission = mascota.getHoraIngreso() != null ? mascota.getHoraIngreso() : "No registrado";
+
+        String admission = mascota.getHoraIngreso() != null
+                ? mascota.getHoraIngreso().format(DateTimeFormatter.ofPattern("hh:mm a"))
+                : "No registrado";
+
         String edadStr = mascota.getEdad() > 0 ? mascota.getEdad() + " años" : "N/A";
 
         // Si no hay registros devuelve default
@@ -135,10 +141,10 @@ public class MonitoreoService {
 
         return new PetMonitoringFullResponse(
                 mascota.getNombre(),
-                mascota.getOwner(),
-                String.valueOf(mascota.getEdad()),
-                mascota.getRaza(),
-                mascota.getHoraIngreso(),
+                owner,
+                edadStr,
+                breed,
+                admission,
                 currentHR,
                 status,
                 history);

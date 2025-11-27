@@ -1,19 +1,19 @@
 package com.petlink.petlink_backend.DTO;
 
 import java.util.List;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
 public class PetMonitoringFullResponse {
-        private String name;
+
+        private String nombreMascota;
         private String owner;
-        private String age;
-        private String breed;
-        private String admissionTime;
-        private Integer currentHeartRate;
-        private String status;
-        private List<Integer> lastSixHeartRate;
+        private String edad;
+        private String raza;
+        private String horaIngreso;
+        private Integer ritmoCardiacoActual;
+        private String estado;
+        private List<Integer> history;
 }

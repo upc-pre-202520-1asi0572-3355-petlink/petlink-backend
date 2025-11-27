@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -41,7 +43,11 @@ public class MascotaController {
         mascota.setEstadoSalud(request.getEstadoSalud());
         mascota.setOwner(request.getOwner());
         mascota.setRaza(request.getRaza());
-        mascota.setHoraIngreso(request.getHoraIngreso());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+        LocalTime hora = LocalTime.parse(request.getHoraIngreso(), formatter);
+        mascota.setHoraIngreso(hora);
+
         mascota.setInternado(request.isInternado());
 
         // Asignar collar si vino en el request
@@ -78,7 +84,11 @@ public class MascotaController {
         mascota.setEstadoSalud(request.getEstadoSalud());
         mascota.setOwner(request.getOwner());
         mascota.setRaza(request.getRaza());
-        mascota.setHoraIngreso(request.getHoraIngreso());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+        LocalTime hora = LocalTime.parse(request.getHoraIngreso(), formatter);
+        mascota.setHoraIngreso(hora);
+
         mascota.setInternado(request.isInternado());
 
         // reasignar collar si es necesario

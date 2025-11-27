@@ -1,5 +1,8 @@
 package com.petlink.petlink_backend.entity;
 
+import java.time.LocalTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -41,7 +44,8 @@ public class Mascota {
     @NotBlank
     private String raza;
 
-    private String horaIngreso; // formato "10:30 AM"
+    @JsonFormat(pattern = "hh:mm a")
+    private LocalTime horaIngreso;
 
     private boolean internado = false;
 
