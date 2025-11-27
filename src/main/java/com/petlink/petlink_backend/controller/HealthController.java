@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthController {
     @GetMapping("/")
     public String home() {
-        return "✅ PetLink Backend is running on Railway!";
+        return "PetLink Backend is running on Railway!";
     }
 }

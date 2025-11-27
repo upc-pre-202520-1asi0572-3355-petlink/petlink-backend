@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/api/v1/vitals")
@@ -25,13 +26,10 @@ public class VitalsController {
         this.monitoreoRepo = monitoreoRepo;
     }
 
-    /**
-     * Recibe datos desde Wokwi (ESP32)
-     */
     @PostMapping("/receive")
     public ResponseEntity<?> receive(@RequestBody VitalSignRequest payload) {
 
-        Collar collar = collarRepo.findById(payload.collarId)
+        Collar collar = collarRepo.findById(payload.getCollarId())
                 .orElseThrow(() -> new RuntimeException("Collar no encontrado"));
 
         Mascota mascota = collar.getMascotaAsignada();
@@ -39,13 +37,21 @@ public class VitalsController {
         if (mascota == null)
             return ResponseEntity.badRequest().body("El collar no está asignado a ninguna mascota");
 
+        LocalDateTime fechaLeida;
+        try {
+            fechaLeida = LocalDateTime.parse(payload.getTimestamp(),
+                    DateTimeFormatter.ISO_DATE_TIME);
+        } catch (Exception ex) {
+            fechaLeida = LocalDateTime.now();
+        }
+
         Monitoreo registro = new Monitoreo();
         registro.setMascota(mascota);
-        registro.setRitmoCardiaco(payload.heartBpm);
+        registro.setRitmoCardiaco(payload.getHeartBpm());
         registro.setActividad(100);
         registro.setUbicacion("Clinica - Sala 1");
-        registro.setEstadoLED(payload.state);
-        registro.setFecha(payload.timestamp);
+        registro.setEstadoLED(payload.getState());
+        registro.setFecha(fechaLeida);
         registro.setUltimaActualizacion(LocalDateTime.now());
 
         monitoreoRepo.save(registro);

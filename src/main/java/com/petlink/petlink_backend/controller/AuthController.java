@@ -21,7 +21,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<Usuario> register(@RequestBody Usuario usuario) {
         if (usuarioService.buscarPorEmail(usuario.getEmail()) != null) {
-            return ResponseEntity.badRequest().body(null); // Ya existe
+            return ResponseEntity.badRequest().body(null);
         }
         Usuario nuevo = usuarioService.guardar(usuario);
         return ResponseEntity.ok(nuevo);

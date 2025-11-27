@@ -5,17 +5,24 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Payload enviado desde la pechera IoT (ESP32)")
 public class VitalSignRequest {
 
-    @Schema(description = "Id del dispositivo IoT")
-    public String deviceId;
+    private long collarId;
+    private String timestamp;
+    private int heartBpm;
+    private String state;
 
-    @Schema(description = "timestamp generado en el ESP32")
-    public String timestamp;
+    public long getCollarId() {
+        return collarId;
+    }
 
-    @Schema(description = "Ritmo cardíaco en BPM")
-    public int heartBpm;
+    public String getTimestamp() {
+        return timestamp;
+    }
 
-    @Schema(description = "Estado del indicador (ESTABLE, ALERTA, CRITICO)")
-    public String state;
+    public int getHeartBpm() {
+        return heartBpm;
+    }
 
-    public Long collarId;
+    public String getState() {
+        return state;
+    }
 }

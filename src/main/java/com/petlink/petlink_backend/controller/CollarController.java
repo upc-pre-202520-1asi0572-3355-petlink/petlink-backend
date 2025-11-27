@@ -1,28 +1,36 @@
 package com.petlink.petlink_backend.controller;
 
 import com.petlink.petlink_backend.entity.Collar;
-import com.petlink.petlink_backend.service.CollarService;
+import com.petlink.petlink_backend.repository.CollarRepository;
 import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/collares")
+@RequestMapping("/api/collare")
+@RequiredArgsConstructor
+@CrossOrigin("*")
 public class CollarController {
 
-    private final CollarService service;
+    private final CollarRepository collarRepo;
 
-    public CollarController(CollarService service) {
-        this.service = service;
+    /** Listar todos los collares */
+    @GetMapping
+    public List<Collar> listar() {
+        return collarRepo.findAll();
     }
 
-    @PostMapping
-    public Collar crear(@RequestBody Collar c) {
-        return service.crear(c);
-    }
-
+    /** Listar collares disponibles */
     @GetMapping("/disponibles")
     public List<Collar> disponibles() {
-        return service.listarDisponibles();
+        return collarRepo.findByEstado("DISPONIBLE");
+    }
+
+    /** Crear collar */
+    @PostMapping
+    public Collar crear(@RequestBody Collar c) {
+        c.setEstado("DISPONIBLE");
+        return collarRepo.save(c);
     }
 }

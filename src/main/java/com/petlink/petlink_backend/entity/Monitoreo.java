@@ -2,7 +2,6 @@ package com.petlink.petlink_backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,7 +18,7 @@ public class Monitoreo {
     // Relación con la mascota internada
     @ManyToOne(optional = false)
     @JoinColumn(name = "mascota_id")
-    private Mascota mascota; // nombre corregido
+    private Mascota mascota;
 
     @Column(name = "ritmo_cardiaco")
     private Integer ritmoCardiaco; // bpm
@@ -28,7 +27,7 @@ public class Monitoreo {
     private Integer actividad; // %
 
     @Column(name = "fecha")
-    private String fecha;
+    private LocalDateTime fecha;
 
     @Column(nullable = false, length = 50)
     private String ubicacion;
@@ -38,12 +37,4 @@ public class Monitoreo {
 
     @Column(name = "ultimaActualizacion")
     private LocalDateTime ultimaActualizacion;
-
-    public String getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
-    }
 }
