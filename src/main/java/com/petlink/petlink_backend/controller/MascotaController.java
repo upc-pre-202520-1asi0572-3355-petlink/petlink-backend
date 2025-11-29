@@ -100,19 +100,32 @@ public class MascotaController {
             mascota.setHoraIngreso(hora);
         }
 
-        mascota.setInternado(request.isInternado());
+        Collar collarActual = mascota.getCollarAsignado();
 
-        // reasignar collar si es necesario
-        if (request.getCollarId() != null) {
-            Collar collar = collarRepo.findById(request.getCollarId())
-                    .orElseThrow(() -> new RuntimeException("Collar no encontrado"));
+        if (request.getCollarId() == null) {
 
-            mascota.setCollarAsignado(collar);
-            collar.setEstado("ASIGNADO");
-            collar.setMascotaAsignada(mascota);
-            collarRepo.save(collar);
+            if (collarActual != null) {
+                collarActual.setEstado("DISPONIBLE");
+                collarActual.setMascotaAsignada(null);
+                collarRepo.save(collarActual);
+            }
+            mascota.setCollarAsignado(null);
+
+        } else {
+            if (collarActual != null && !collarActual.getId().equals(request.getCollarId())) {
+                collarActual.setEstado("DISPONIBLE");
+                collarActual.setMascotaAsignada(null);
+                collarRepo.save(collarActual);
+            }
+            Collar collarNuevo = collarRepo.findById(request.getCollarId())
+            .orElseThrow(() -> new RuntimeException("Collar no encontrado"));
+
+            mascota.setCollarAsignado(collarNuevo);
+            collarNuevo.setEstado("ASIGNADO");
+            collarNuevo.setMascotaAsignada(mascota);
+            collarRepo.save(collarNuevo);
         }
-
+        
         mascotaRepo.save(mascota);
         return ResponseEntity.ok(mascota);
     }
