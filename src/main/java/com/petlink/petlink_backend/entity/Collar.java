@@ -1,5 +1,7 @@
 package com.petlink.petlink_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,6 +18,7 @@ public class Collar {
     private String estado; // DISPONIBLE / ASIGNADO
     private String descripcion;
 
-    @OneToOne
+    @OneToOne(mappedBy = "collarAsignado")
+    @JsonIgnore
     private Mascota mascotaAsignada;
 }

@@ -50,5 +50,6 @@ public class Mascota {
     private boolean internado = false;
 
     @OneToOne
+    @JoinColumn(name = "collar_id")
     private Collar collarAsignado;
 }

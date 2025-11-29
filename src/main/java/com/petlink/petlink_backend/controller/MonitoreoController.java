@@ -74,8 +74,34 @@ public class MonitoreoController {
     @GetMapping("/mascota/{id}")
     public List<MonitoreoResponse> obtenerByMascota(@PathVariable Long id) {
 
+        Mascota mascota = mascotaRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada con ID: " + id));
+
+        if (!mascota.isInternado()) {
+            throw new RuntimeException("La mascota no se encuentra internada actualmente.");
+        }
+
         return monitoreoRepo.findByMascotaId(id)
                 .stream()
+                .sorted((m1, m2) -> m2.getFecha().compareTo(m1.getFecha())) // Ordenar por fecha descendente (más reciente primero)
+                .map(m -> new MonitoreoResponse(
+                        m.getId(),
+                        m.getMascota().getId(),
+                        m.getMascota().getNombre(),
+                        m.getRitmoCardiaco(),
+                        m.getActividad(),
+                        m.getUbicacion(),
+                        m.getEstadoLED(),
+                        m.getUltimaActualizacion()))
+                .toList();
+    }
+
+    @GetMapping("/all")
+    public List<MonitoreoResponse> obtenerTodos() {
+        return monitoreoRepo.findAll()
+                .stream()
+                .filter(m -> m.getMascota().isInternado()) // Solo mascotas actualmente internadas
+                .sorted((m1, m2) -> m2.getFecha().compareTo(m1.getFecha())) // Ordenar por fecha descendente
                 .map(m -> new MonitoreoResponse(
                         m.getId(),
                         m.getMascota().getId(),

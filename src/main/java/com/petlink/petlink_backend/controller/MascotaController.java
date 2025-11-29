@@ -44,9 +44,11 @@ public class MascotaController {
         mascota.setOwner(request.getOwner());
         mascota.setRaza(request.getRaza());
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
-        LocalTime hora = LocalTime.parse(request.getHoraIngreso(), formatter);
-        mascota.setHoraIngreso(hora);
+        if (request.getHoraIngreso() != null && !request.getHoraIngreso().trim().isEmpty()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+            LocalTime hora = LocalTime.parse(request.getHoraIngreso(), formatter);
+            mascota.setHoraIngreso(hora);
+        }
 
         mascota.setInternado(request.isInternado());
 
@@ -61,11 +63,18 @@ public class MascotaController {
 
             mascota.setCollarAsignado(collar);
             collar.setEstado("ASIGNADO");
+            
+            // Primero guardar la mascota para que exista en la BD
+            mascotaRepo.save(mascota);
+            
+            // Luego asignar la referencia y guardar el collar
             collar.setMascotaAsignada(mascota);
             collarRepo.save(collar);
+        } else {
+            // Si no hay collar, solo guardar la mascota
+            mascotaRepo.save(mascota);
         }
-
-        mascotaRepo.save(mascota);
+        
         return ResponseEntity.ok(mascota);
     }
 
@@ -85,9 +94,11 @@ public class MascotaController {
         mascota.setOwner(request.getOwner());
         mascota.setRaza(request.getRaza());
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
-        LocalTime hora = LocalTime.parse(request.getHoraIngreso(), formatter);
-        mascota.setHoraIngreso(hora);
+        if (request.getHoraIngreso() != null && !request.getHoraIngreso().trim().isEmpty()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+            LocalTime hora = LocalTime.parse(request.getHoraIngreso(), formatter);
+            mascota.setHoraIngreso(hora);
+        }
 
         mascota.setInternado(request.isInternado());
 
